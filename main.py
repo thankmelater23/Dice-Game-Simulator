@@ -29,7 +29,19 @@ class Game:
 	def __init__(self):
 		self.pot = self.bet_amount * 2
 		self.reset_all_points()
+
+	def game_over(self, name):
+		print(f'Game Over, {name} lost!')
+		exit()
 		
+	def checkScore(self):
+		if self.player1.score < 1:
+			self.game_over(self.player1.name)
+		elif self.player2.score < 1:
+			self.game_over(self.player2.name)
+		else:
+			pass
+			
 	def shake_dice(self):
 		os.system('clear')
 		self.status()
@@ -68,6 +80,7 @@ class Game:
 		self.take_bets()
 		self.first_role = True
 		print('New match')
+		print('#################\n')
 		
 			
 	def reset_point(self):
@@ -77,13 +90,14 @@ class Game:
 		self.player1.score -= self.bet_amount
 		self.player2.score -= self.bet_amount
 		self.pot = self.bet_amount * 2
-		print(f'Bets of {self.bet_amount} is taken from each player')
-		print(f'${self.pot} added to the pot')
+		print(f'Bets of ${self.bet_amount} is taken from each player')
+		print(f'${self.pot} added to the pot\n')
+		self.checkScore()
 		
 	def processor(self):
 			if (self.point_rolled == 7 or self.point_rolled == 11) and self.first_roll == True:
-				self.player_turn.score += self.take_pot()
 				print(f'{self.player_turn.name} wins ${self.pot}.  {self.player_turn.name}: {self.point_rolled}')
+				self.player_turn.score += self.take_pot()
 				self.reset_all_points()
 					
 			elif (self.point_rolled == 2 or self.point_rolled == 3 or self.point_rolled == 12) and self.first_roll == True:
@@ -109,8 +123,11 @@ class Game:
 			
 			elif self.first_roll == True:
 				print(f'no hit')
-				self.old_point = self.point_rolled
-				print(f'Point is {self.old_point}')
+				
+				if self.old_point != 0:
+					self.old_point = self.point_rolled
+					print(f'Point is {self.old_point}')
+					
 				self.first_role = False
 				self.reset_point()
 				self.next_player()
@@ -125,8 +142,8 @@ class Game:
 	
 		print(f'\n\nCurrent Turn count: {self.turns}')			
 		print(f'Current Player turn: {self.player_turn.name}\n')
-		print(f'{self.player1.name} Pocket: {self.player1.score}')
-		print(f'{self.player2.name} Pocket: {self.player2.score}')
+		print(f'{self.player1.name} Pocket: ${self.player1.score}')
+		print(f'{self.player2.name} Pocket: ${self.player2.score}')
 			
 					
 
@@ -137,14 +154,15 @@ game = Game()
 
 
 while control != 'q':
-	control = input('Press \'S\' to play, or \'C\' to check game status,  or \'Q\'  to to exit.')
+	control = input('Press *Any Button* to play, or \'C\' to check game status,  or \'Q\'  to to exit.')
+	print('#################\n')
 	
-	if control == 's':
-		game.shake_dice()
-		
-	elif control == 'q':
+	if control == 'q':
 		print('Game ended')
 		exit()
 		
 	elif control == 'c':
 		game.status()
+		
+	else:
+		game.shake_dice()
